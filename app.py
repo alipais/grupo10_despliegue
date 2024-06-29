@@ -16,15 +16,15 @@ def obtener_conexion():
         con.connect()
         cursor = con.cursor(dictionary=True)
         print('Reconectada!')
-    return con, cursor
+    return  cursor
 
 @app.route('/')
 def inicio():
     try:
-        con, cursor = obtener_conexion()
+        cursor = obtener_conexion()
         cursor.execute('SELECT * FROM usuarios;')
         datos = cursor.fetchall()
-        con.close()
+       # con.close()
         return render_template('usuarios/usuarios.html', usuarios=datos)
     except Exception as e:
         print(f"Error al cargar la página de inicio: {e}")
