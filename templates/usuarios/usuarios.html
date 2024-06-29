@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+
+    <ul>
+        {% for s in usuarios %}
+        <li>{{ s.nombre }}, {{ s.apellido }} {{ s.email }} {{ s.contrasena }} {{ s.activo }}- {{ s.administrador }} </li>
+        {% endfor%}
+    </ul>
+
+{% endblock contenido %}
+
+

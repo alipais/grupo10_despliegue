@@ -1,0 +1,8 @@
+Database host address:
+Alipais.mysql.pythonanywhere-services.com
+
+Username:  Alipais
+
+Alipais$favorite_cake
+
+contraseña:   grupo102024
