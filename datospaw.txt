@@ -1,12 +1,10 @@
- host:
-AliciaG.mysql.pythonanywhere-services.com
 
-Username:  AliciaG
 
-Base datos: AliciaG$favorite_cake
+Database host address:Alipais.mysql.pythonanywhere-services.com
+
+Username:Alipais
+
+Name bd
+Alipais$favorite_cake
 
 contraseña:   grupo102024
-
-
-mysql -u  AliciaG h- AliciaG.mysql.pythonanywhere-services.com -p 'AliciaG$favorite_cake'
-show databases;

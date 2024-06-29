@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from componentes.config_db import conexion
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5500"}})  # Permitir CORS para las rutas que empiezan con /api/
+CORS(app, resources={r"/api/*": {"origins": ""}})  # Permitir CORS para las rutas que empiezan con /api/
 
 # Conexión a la base de datos
 def obtener_conexion():
@@ -17,6 +17,18 @@ def obtener_conexion():
         cursor = con.cursor(dictionary=True)
         print('Reconectada!')
     return con, cursor
+
+@app.route('/')
+def inicio():
+    try:
+        con, cursor = obtener_conexion()
+        cursor.execute('SELECT * FROM usuarios;')
+        datos = cursor.fetchall()
+        con.close()
+        return render_template('usuarios/usuarios.html', usuarios=datos)
+    except Exception as e:
+        print(f"Error al cargar la página de inicio: {e}")
+        return "Ocurrió un error al cargar la página de inicio"
 
 # Crear un nuevo usuario
 @app.route('/api-favorite_cake/usuarios', methods=['POST'])
@@ -43,6 +55,19 @@ def crear_usuario():
     except Exception as e:
         print(f"Error al crear usuario: {e}")
         return jsonify({"error": "Ocurrió un error al crear el usuario"}), 500
+    
+@app.route('/api-favorite_cake/usuarios', methods=['GET'])
+def obtener_usuarios():
+    try:
+        con, cursor = obtener_conexion()
+        cursor.execute('SELECT * FROM usuarios;')
+        datos = cursor.fetchall()
+        con.close()
+        return jsonify(datos)
+    except Exception as e:
+        print(f"Error al obtener usuarios: {e}")
+        return jsonify({"error": "Ocurrió un error al obtener los usuarios"}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
