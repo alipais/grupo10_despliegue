@@ -5,7 +5,7 @@ config_dev = {
     "user": 'root',
     'password': '',
     'host': '127.0.0.1',
-    'database': 'favoritecake_db'
+    'database': 'favorite_cake'
 }
 
 config_prod = {
