@@ -10,10 +10,10 @@ config_dev = {
 
 config_prod = {
     # configuración en producción (despliegue)
-    "user": 'LinkMDQ',
-    'password': '155722Asd',
-    'host': 'LinkMDQ.mysql.pythonanywhere-services.com',
-    'database': 'favoritecake_db'
+    "user": 'AliciaG',
+    'password': 'grupo102024',
+    'host': 'AliciaG.mysql.pythonanywhere-services.com',
+    'database': 'AliciaG$favoriteCake'
 }
 
 conexion = mysql.connector.connect(**config_dev)
