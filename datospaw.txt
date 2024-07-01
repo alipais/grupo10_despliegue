@@ -1,10 +1,10 @@
 
 
-Database host address:Alipais.mysql.pythonanywhere-services.com
+Database host address:AliciaG.mysql.pythonanywhere-services.com
 
-Username:Alipais
+Username:AliciaG
 
 Name bd
-Alipais$favorite_cake
+AliciaG$favorite_cake
 
 contraseña:   grupo102024
