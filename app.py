@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_cors import CORS
 import mysql.connector
 from mysql.connector import errorcode
-from componentes.validador import validar_contraseña, validar_nombre
+from componentes.validador import validar_contraseña, validar_nombre, validar_apellido
 import bcrypt
 
 app = Flask(__name__)
@@ -16,6 +16,10 @@ db_config = {
     'host': '127.0.0.1',
     'database': 'favorite_cake'
 }
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/registro')
 def registro():
@@ -33,13 +37,22 @@ def register():
     if not valid:
         flash(message)
         return redirect('/registro')
+<<<<<<< HEAD
     
     # Validar nombre
+=======
+
+    # Validar el nombre
+>>>>>>> c629c2d470b3afc824f2b13cc0c678944789c084
     valid, message = validar_nombre(nombre)
     if not valid:
         flash(message)
         return redirect('/registro')
-    
+    valid, message = validar_apellido(apellido)
+    if not valid:
+        flash(message)
+        return redirect('/registro')
+
     # Encriptar la contraseña
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
@@ -65,6 +78,34 @@ def register():
             conn.close()
 
     return redirect('/registro')
+    
+    
+@app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        email = request.form['email']
+        # Actualizar el usuario en la base de datos
+        cursor.execute("""
+            UPDATE usuarios SET nombre = %s, apellido = %s, email = %s
+            WHERE id_usuario = %s
+        """, (nombre, apellido, email, user_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash("Usuario actualizado exitosamente!")
+        return redirect('/usuarios')
+    else:
+        # Obtener los datos del usuario para mostrarlos en el formulario de edición
+        cursor.execute("SELECT nombre, apellido, email FROM usuarios WHERE id_usuario = %s", (user_id,))
+        usuario = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return render_template('edit_user.html', usuario=usuario, user_id=user_id)    
+
 
 @app.route('/usuarios')
 def usuarios():
@@ -75,6 +116,7 @@ def usuarios():
     cursor.close()
     conn.close()
     return render_template('usuarios.html', usuarios=usuarios)
+
 
 @app.route('/delete_user/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
@@ -93,6 +135,41 @@ def delete_user(user_id):
             conn.close()
 
     return redirect('/usuarios')
+@app.route('/update_user/<int:user_id>', methods=['GET', 'POST'])
+
+def update_user(user_id):
+    if request.method == 'GET':
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id_usuario, nombre, apellido, email FROM usuarios WHERE id_usuario = %s", (user_id,))
+        usuario = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return render_template('update_user.html', usuario=usuario)
+    elif request.method == 'POST':
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        email = request.form['email']
+
+        conn = None
+        try:
+            conn = mysql.connector.connect(**db_config)
+            cursor = conn.cursor()
+            cursor.execute("UPDATE usuarios SET nombre = %s, apellido = %s, email = %s WHERE id_usuario = %s",
+                           (nombre, apellido, email, user_id))
+            conn.commit()
+            flash("Usuario actualizado exitosamente!")
+        except mysql.connector.Error as err:
+            flash(f"Error: {err}")
+        finally:
+            if conn:
+                cursor.close()
+                conn.close()
+
+        return redirect('/usuarios')
+
+
+
 
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
@@ -121,4 +198,8 @@ def edit_user(user_id):
         return render_template('edit_user.html', usuario=usuario, user_id=user_id)
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run(debug=True)
+=======
+    app.run(debug=True, port=5050)
+>>>>>>> c629c2d470b3afc824f2b13cc0c678944789c084
