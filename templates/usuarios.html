@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro usuario</title>
-    <link rel="stylesheet" href="../styles.css">
+    <title>Usuarios Registrados</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <h1>Usuarios Registrados</h1>
@@ -19,7 +17,6 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
-                <th>Edad</th>
                 <th>Email</th>
                 <th>Acciones</th>
             </tr>
@@ -31,8 +28,8 @@
                 <td>{{ usuario[1] }}</td>
                 <td>{{ usuario[2] }}</td>
                 <td>{{ usuario[3] }}</td>
-                <td>{{ usuario[4] }}</td>
                 <td>
+                    <a href="{{ url_for('edit_user', user_id=usuario[0]) }}">Editar</a>
                     <form action="{{ url_for('delete_user', user_id=usuario[0]) }}" method="POST" style="display:inline;">
                         <button type="submit">Eliminar</button>
                     </form>
@@ -43,5 +40,4 @@
     </table>
 </body>
 </html>
-
 
