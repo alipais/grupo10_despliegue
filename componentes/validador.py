@@ -11,5 +11,10 @@ def validar_contraseña(password):
 
 def validar_nombre(nombre):
     if re.search("[0-9]", nombre):
-        return False, "El nombre no puede contener numeros."
+        return False, "El nombre no puede contener números."
+    return True, ""
+
+def validar_apellido(apellido):
+    if re.search("[0-9]", apellido):
+        return False, "El apellido no puede contener números."
     return True, ""
