@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_cors import CORS
 import mysql.connector
 from mysql.connector import errorcode
@@ -11,10 +11,10 @@ app.secret_key = 'clave'
 
 # Configuración de la base de datos
 db_config = {
-    "user": 'LinkMDQ',
-    'password': '155722Asd!',
-    'host': 'LinkMDQ.mysql.pythonanywhere-services.com',
-    'database': 'LinkMDQ$favoritecake_db'
+    'user': 'root',
+    'password': '',
+    'host': '127.0.0.1',
+    'database': 'favorite_cake'
 }
 
 @app.route('/')
@@ -29,7 +29,6 @@ def registro():
 def register():
     nombre = request.form['nombre']
     apellido = request.form['apellido']
-    edad = request.form['edad']
     email = request.form['email']
     password = request.form['password']
 
@@ -57,8 +56,8 @@ def register():
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO usuarios_ (nombre, apellido, edad, email, password) VALUES (%s, %s, %s, %s, %s)",
-                       (nombre, apellido, edad, email, hashed_password))
+        cursor.execute("INSERT INTO usuarios (nombre, apellido, email, contraseña) VALUES (%s, %s, %s, %s)",
+                       (nombre, apellido, email, hashed_password))
         conn.commit()
         flash("Usuario registrado exitosamente!")
     except mysql.connector.Error as err:
@@ -107,7 +106,7 @@ def edit_user(user_id):
 def usuarios():
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
-    cursor.execute("SELECT id, nombre, apellido, edad, email FROM usuarios_")
+    cursor.execute("SELECT id_usuario, nombre, apellido, email FROM usuarios")
     usuarios = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -120,7 +119,7 @@ def delete_user(user_id):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM usuarios_ WHERE id = %s", (user_id,))
+        cursor.execute("DELETE FROM usuarios WHERE id_usuario = %s", (user_id,))
         conn.commit()
         flash("Usuario eliminado exitosamente!")
     except mysql.connector.Error as err:
@@ -131,6 +130,41 @@ def delete_user(user_id):
             conn.close()
 
     return redirect('/usuarios')
+@app.route('/update_user/<int:user_id>', methods=['GET', 'POST'])
+
+def update_user(user_id):
+    if request.method == 'GET':
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id_usuario, nombre, apellido, email FROM usuarios WHERE id_usuario = %s", (user_id,))
+        usuario = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return render_template('update_user.html', usuario=usuario)
+    elif request.method == 'POST':
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        email = request.form['email']
+
+        conn = None
+        try:
+            conn = mysql.connector.connect(**db_config)
+            cursor = conn.cursor()
+            cursor.execute("UPDATE usuarios SET nombre = %s, apellido = %s, email = %s WHERE id_usuario = %s",
+                           (nombre, apellido, email, user_id))
+            conn.commit()
+            flash("Usuario actualizado exitosamente!")
+        except mysql.connector.Error as err:
+            flash(f"Error: {err}")
+        finally:
+            if conn:
+                cursor.close()
+                conn.close()
+
+        return redirect('/usuarios')
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5050)
