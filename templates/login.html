@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Usuario</title>
+    <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -38,17 +38,17 @@
             document.querySelector("nav").classList.toggle("active");
         });
     </script>
-    <h1>Editar Usuario</h1>
-    <form action="{{ url_for('edit_user', user_id=user_id) }}" method="POST">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" value="{{ usuario[0] }}" required><br>
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" name="apellido" value="{{ usuario[1] }}" required><br>
-        <label for="edad">Edad:</label>
-        <input type="number" id="edad" name="edad" value="{{ usuario[2] }}" required><br>
+    <h1>Iniciar Sesión</h1>
+        <form action="{{ url_for('login') }}" method="POST">
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ usuario[3] }}" required><br>
-        <button type="submit">Guardar Cambios</button>
+        <input type="email" id="email" name="email" required><br>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Iniciar Sesión</button>
     </form>
+
+    <br><br><br>
+    <h1>BY PASS POR FINES PRACTICOS</h>
+        <li><a href="./usuarios">Pagina del admin del sitio</a></li>
 </body>
 </html>
