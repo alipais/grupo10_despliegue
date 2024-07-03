@@ -64,6 +64,17 @@
         </ul>
       </nav>
     </header>
+<<<<<<< HEAD
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+=======
 
 
     <script>
@@ -72,6 +83,7 @@
           document.querySelector("nav").classList.toggle("active");
         });
       </script>
+>>>>>>> c629c2d470b3afc824f2b13cc0c678944789c084
     <h1 id="titulo">Registro de Usuarios</h1>
     <h1>Registro</h1>
     {% with messages = get_flashed_messages() %}
