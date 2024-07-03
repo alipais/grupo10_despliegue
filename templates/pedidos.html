@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos registrados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='./styles.css')}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="headerHam">
+      <a href="https://alumnomdq.github.io/CAC-Grupo10/index.html">
+        <img id="logo"
+          src="https://raw.githubusercontent.com/AlumnoMDQ/CAC-Grupo10/main/imgs/myfavlogo.png"
+          alt="Logo del emprendimiento"></a>
+
+      <button class="menuHam" aria-label="Toggle menu">&#9776;</button>
+
+      <nav>
+        <ul>
+          <li><a href="https://alumnomdq.github.io/CAC-Grupo10/site/nosotros.html">Nosotros</a></li>
+          <li class="dropdown">
+            <a href="https://alumnomdq.github.io/CAC-Grupo10/site/catalogo.html">Nuestros Trabajos</a>
+          </li>
+          <li class="dropdown">
+            <a href="#">Promociones</a>
+            <ul class="dropdown-content">
+              <li><a href="https://alumnomdq.github.io/CAC-Grupo10/site/promociones.html">Cumpleaños</a></li>
+              <li>
+                <a href="https://alumnomdq.github.io/CAC-Grupo10/site/promociones.html#Casamientos">Casamientos</a>
+              </li>
+              <li><a href="https://alumnomdq.github.io/CAC-Grupo10/site/promociones.html#Reuniones">Reuniones</a></li>
+            </ul>
+          </li>
+          <li><a accesskey="c" href="https://alumnomdq.github.io/CAC-Grupo10/site/contacto.html">Contacto</a></li>
+          <li><a href="./registro">Registrarse</a></li>
+          <li><a href="./login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+    <script>
+        document.querySelector(".menuHam").addEventListener("click", function () {
+          this.classList.toggle("active");
+          document.querySelector("nav").classList.toggle("active");
+        });
+      </script>
+    <h1>Pedidos Registrados</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Pedido</th>
+                <th>ID Usuario</th>
+                <th>Tipo de Evento</th>
+                <th>Cantidad de Personas</th>
+                <th>Nombre de Contacto</th>
+                <th>Apellido de Contacto</th>
+                <th>Email de Contacto</th>
+                <th>Teléfono de Contacto</th>
+                <th>Mensaje</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido[0] }}</td>
+                <td>{{ pedido[1] }}</td>
+                <td>{{ pedido[2] }}</td>
+                <td>{{ pedido[3] }}</td>
+                <td>{{ pedido[4] }}</td>
+                <td>{{ pedido[5] }}</td>
+                <td>{{ pedido[6] }}</td>
+                <td>{{ pedido[7] }}</td>
+                <td>{{ pedido[8] }}</td>
+                <td>
+                    <form action="/delete_pedido/{{ pedido[0] }}" method="post">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -20,7 +20,7 @@ db_config = {
 @app.route('/')
 def index():
     return render_template('index.html')
-
+########## registro usuario #######
 @app.route('/registro')
 def registro():
     return render_template('registro.html')
@@ -76,6 +76,7 @@ def register():
 
     return redirect('/registro')
     
+ ############## editar usuario #############
     
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
@@ -136,11 +137,82 @@ def delete_user(user_id):
 
     return redirect('/usuarios')
 
+##################### pedidos ############################
+
+#ver pedidos
+
+@app.route('/pedidos')
+def verpedidos():
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    cursor.execute('SELECT id_pedidos, id_usuario, tipo_evento, Cantidad_personas, nombre_contacto, apellido_contacto, email_contacto, telefono_contacto, mensaje FROM pedidos_')
+    pedidos = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('pedidos.html', pedidos=pedidos)
+
+@app.route('/delete_pedido/<int:pedido_id>', methods=['POST'])
+def delete_pedido(pedido_id):
+    conn = None
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM pedidos_ WHERE id_pedidos = %s", (pedido_id,))
+        conn.commit()
+        flash("Pedido eliminado exitosamente!")
+    except mysql.connector.Error as err:
+        flash(f"Error: {err}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+    return redirect('/pedidos')
+
+@app.route('/contacto')
+def consulta():
+    return render_template('contacto.html')
+
+@app.route('/contacto', methods=['POST'])
+def realizar_pedido():
+    nombre_contacto = request.form['nombre']
+    apellido_contacto = request.form['apellido']
+    email_contacto = request.form['email']
+    telefono_contacto = request.form['telefono_contacto']
+    Cantidad_personas = request.form['cantidad_personas']
+    mensaje = request.form['consulta']
+    tipo_evento = request.form['tipo_evento']
+
+    # Guardar la consulta/pedido en la base de datos
+    conn = None
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO pedidos_ (tipo_evento, Cantidad_personas, nombre_contacto, apellido_contacto, email_contacto, telefono_contacto, mensaje) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                      (tipo_evento, Cantidad_personas, nombre_contacto, apellido_contacto, email_contacto, telefono_contacto, mensaje))
+        conn.commit()
+        flash("Consulta/pedido registrado exitosamente!")
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            flash("Algo está mal con tu usuario o contraseña de la base de datos.")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            flash("La base de datos no existe.")
+        else:
+            flash(f"Error: {err}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+    return redirect('/contacto')
+
 @app.route('/login')
 def login():
-
     return render_template('login.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+#SELECT 'id_pedidos, id_usuario, tipo_evento, Cantidad_personas, nombre_contacto, apellido_contacto, email_contacto, telefono_contacto, mensaje FROM pedidos');
